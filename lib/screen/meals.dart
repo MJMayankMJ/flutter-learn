@@ -37,7 +37,7 @@ class MealsScreen extends StatelessWidget {
           SizedBox(
             height: 16,
             child: Text(
-              'Try selecting a different Category!!',
+              'Try selecting a different Category!!!',
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
