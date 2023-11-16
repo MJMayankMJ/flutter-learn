@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meals/provider/favorites_provider.dart';
-
-import 'package:transparent_image/transparent_image.dart';
-import 'package:meals/models/meal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals/models/meal.dart';
+import 'package:meals/provider/favorites_provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MealDetailScreen extends ConsumerWidget {
   const MealDetailScreen({
@@ -36,19 +35,40 @@ class MealDetailScreen extends ConsumerWidget {
                 ),
               );
             },
-            icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+            icon: AnimatedSwitcher(
+              // AnimationSwitcher cares about that ur transitioning btw 2 values & give u the fill control on how to transition
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween<double>(
+                    //double tells that the end : 1 is a double otherwise u can also write 1.0
+                    begin: 0.8,
+                    end: 1,
+                  ).animate(animation),
+                  child: child,
+                );
+              },
+              //flutter doesnt notice any because the icon widget is the same so we use key
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_border,
+                key: ValueKey(isFavorite),
+              ),
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              fit: BoxFit.cover,
-              height: 250,
-              width: double.infinity,
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                fit: BoxFit.cover,
+                height: 250,
+                width: double.infinity,
+              ),
             ),
             const SizedBox(height: 14),
             Text(
